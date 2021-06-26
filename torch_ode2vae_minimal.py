@@ -27,12 +27,13 @@ class Dataset(data.Dataset):
         return len(self.Xtr)
     def __getitem__(self, idx):
         return self.Xtr[idx]
+    
 # read data
-X = loadmat('rot-mnist-3s.mat')['X'].squeeze() # (N, 16, 784)
-N = 500
-T = 16
+X = loadmat('rot-mnist-3s.mat')['X'].squeeze() # (N, 16, 784) - squeeze simply removes the unecessary 1 dimensions from the dimensionality of the tensor. 784 is the size of the mnist image.
+N = 500 # - number of such sequences
+T = 16 # - number of timepoints in a sequence
 Xtr   = torch.tensor(X[:N],dtype=torch.float32).view([N,T,1,28,28])
-Xtest = torch.tensor(X[N:],dtype=torch.float32).view([-1,T,1,28,28])
+Xtest = torch.tensor(X[N:],dtype=torch.float32).view([-1,T,1,28,28]) # - we dont know number of test data so it is left for torch to figure it out - whatever may be the number
 # Generators
 params = {'batch_size': 25, 'shuffle': True, 'num_workers': 2}
 trainset = Dataset(Xtr)
@@ -44,7 +45,8 @@ testset  = data.DataLoader(testset, **params)
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
-
+    
+# Class for unflattenning a flattened tensor
 class UnFlatten(nn.Module):
     def __init__(self,w):
         super().__init__()
