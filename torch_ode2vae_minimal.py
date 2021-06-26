@@ -53,7 +53,7 @@ class UnFlatten(nn.Module):
         self.w = w
     def forward(self, input):
         nc = input[0].numel()//(self.w**2)
-        return input.view(input.size(0), nc, self.w, self.w)
+        return input.view(input.size(0), nc, self.w, self.w) # do not know what this exactly - I think this resizes to a given fixed size sqaure.
 
 
 # model implementation
